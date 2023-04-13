@@ -95,7 +95,6 @@ namespace ATMTerminalBank.ComponentsTerminal.Controller
                                 return 0;
                             }
                         }
-                        Console.WriteLine("Неизвестная команда\n");
                         break;
                     case 2:
                         Console.WriteLine("Какой способ оплаты вы выберете?\n" +
@@ -161,7 +160,6 @@ namespace ATMTerminalBank.ComponentsTerminal.Controller
                                 return 0;
                             }
                         }
-                        Console.WriteLine("Неизвестная команда\n");
                         break;
                     case 3:
                         Console.WriteLine("Какой способ оплаты вы выберете?\n" +
@@ -226,7 +224,6 @@ namespace ATMTerminalBank.ComponentsTerminal.Controller
                                 return 0;
                             }
                         }
-                        Console.WriteLine("Неизвестная команда\n");
                         break;
                     case 4:
                         return 0;
