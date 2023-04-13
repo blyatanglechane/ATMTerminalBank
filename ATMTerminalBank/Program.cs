@@ -13,7 +13,7 @@ namespace ATMTerminalBank
         static void Main(string[] args)
         {
             // имя, сумма на счету, сумма наличных
-            BaseClient Alexander = new BaseClient("Александр", 4000, 500);
+            BaseClient Alexander = new BaseClient("Александр", 100000, 500);
             BaseClient Semen = new BaseClient("Семён", 2000, 1000);
 
             // Создаём классы компонентов терминала
@@ -22,36 +22,53 @@ namespace ATMTerminalBank
             PrinterSberbank ComponentPrint = new PrinterSberbank();
             ControllerSberbank ComponentController = new ControllerSberbank();
 
+            // Создаём классы компонентов терминала
+            CassetteTinkoff ComponentCasset2 = new CassetteTinkoff();
+            DispensaryTinkoff ComponentDispens2 = new DispensaryTinkoff();
+            PrinterTinkoff ComponentPrint2 = new PrinterTinkoff();
+            ControllerTinkoff ComponentController2 = new ControllerTinkoff();
+
             // собираем терминал
             IATMTerminal SberTer1 = new ATMSberbank(ComponentDispens, ComponentPrint, ComponentController, ComponentCasset);
 
+            IATMTerminal TinkoffTer1 = new ATMTinkoff(ComponentDispens2, ComponentPrint2, ComponentController2, ComponentCasset2);
+
             // начало взаимодействия с терминалом и клиентом
-            Alexander.interact(SberTer1);
+            Alexander.interact(TinkoffTer1);
 
             // безопасный пользовательский ввод
             int InputUser;
 
             // общий цикл программы
-            while (int.TryParse(Console.ReadLine(), out InputUser) && InputUser != 4)
+            while (int.TryParse(Console.ReadLine(), out InputUser) && InputUser != 5)
             {
                 switch (InputUser)
                 {
                     case 1:
                         Console.WriteLine("Внесите наличные: ");
-                        string CashStr = Console.ReadLine();
-                        int CashInput = int.Parse(CashStr);
-                        Alexander.DepositFunds(CashInput);
+                        int CashInput;
+                        while (int.TryParse(Console.ReadLine(), out CashInput))
+                        {
+                            Alexander.DepositFunds(CashInput);
+                            break;
+                        }
                         break;
                     case 2:
                         Console.WriteLine("Выберите сумму, которую хотите снять: ");
-                        string CashStr2 = Console.ReadLine();
-                        int CashInput2 = int.Parse(CashStr2);
-                        Alexander.WithdrawFunds(CashInput2);
+                        int CashInput2;
+                        while (int.TryParse(Console.ReadLine(), out CashInput2))
+                        {
+                            Alexander.WithdrawFunds(CashInput2);
+                            break;
+                        }
                         break;
                     case 3:
                         Alexander.ToPay();
                         break;
                     case 4:
+                        Alexander.PrintAccount();
+                        break;
+                    case 5:
                         Alexander.Exit();
                         break;
                     default:
@@ -61,8 +78,9 @@ namespace ATMTerminalBank
                 }
 
                 // клиент повторно взаимодействует с терминалом
-                Alexander.interact(SberTer1);
+                Alexander.interact(TinkoffTer1);
             }
+            Console.WriteLine("Пока......\n");
         }
     }
 }

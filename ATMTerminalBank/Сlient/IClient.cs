@@ -10,13 +10,16 @@ namespace ATMTerminalBank.Сlient
     interface IClient
     {
         // взаимодействие с терминалом
-        void interact(IATMTerminal ATM);
+        public void interact(IATMTerminal ATM);
+
+        // Показать количество денег на счёте
+        public void PrintAccount();
 
         // Внесение средств
         public void DepositFunds(int Cash);
 
         // Снятие средств
-        void WithdrawFunds(int SumOfMoneyFromAccount);
+        public void WithdrawFunds(int SumOfMoneyFromAccount);
 
         // Оплата услуг
         public void ToPay();

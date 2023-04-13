@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,76 +23,92 @@ namespace ATMTerminalBank.ComponentsTerminal.Cassette
             {5, 10 }
         };
 
+        // Сумма денег в терминале 88000 рублей
+        public int SumMoneyFromCassette() 
+        {
+            int sum = 0;
+            sum += 5000 * NominalCash[5];
+            sum += 2000 * NominalCash[4];
+            sum += 1000 * NominalCash[3];
+            sum += 500 * NominalCash[2];
+            sum += 200 * NominalCash[1];
+            sum += 100 * NominalCash[0];
+            return sum;
+        }
+
         // Выдать деньги из кассеты (вычитаем купюры из словаря)
         public bool GiveMoney(int money)
         {
-            while (true)
+            if (money < SumMoneyFromCassette())
             {
-                if (money - 5000 >= 0 && NominalCash[5] > 0)
+                while (true)
                 {
-                    money -= 5000;
-                    NominalCash[5] -= 1;
-                    Console.WriteLine("Изъята купюра номинала 5000\n");
+                    if (money - 5000 >= 0 && NominalCash[5] > 0)
+                    {
+                        money -= 5000;
+                        NominalCash[5] -= 1;
+                        Console.WriteLine("Изъята купюра номинала 5000\n");
+                    }
+                    else break;
                 }
-                else break;
-            }
-            while (true)
-            {
-                if (money - 2000 >= 0 && NominalCash[4] > 0)
+                while (true)
                 {
-                    money -= 2000;
-                    NominalCash[4] -= 1;
-                    Console.WriteLine("Изъята купюра номинала 2000\n");
+                    if (money - 2000 >= 0 && NominalCash[4] > 0)
+                    {
+                        money -= 2000;
+                        NominalCash[4] -= 1;
+                        Console.WriteLine("Изъята купюра номинала 2000\n");
+                    }
+                    else break;
                 }
-                else break;
-            }
-            while (true)
-            {
-                if (money - 1000 >= 0 && NominalCash[3] > 0)
+                while (true)
                 {
-                    money -= 1000;
-                    NominalCash[3] -= 1;
-                    Console.WriteLine("Изъята купюра номинала 1000\n");
+                    if (money - 1000 >= 0 && NominalCash[3] > 0)
+                    {
+                        money -= 1000;
+                        NominalCash[3] -= 1;
+                        Console.WriteLine("Изъята купюра номинала 1000\n");
+                    }
+                    else break;
                 }
-                else break;
-            }
-            while (true)
-            {
-                if (money - 500 >= 0 && NominalCash[2] > 0)
+                while (true)
                 {
-                    money -= 500;
-                    NominalCash[2] -= 1;
-                    Console.WriteLine("Изъята купюра номинала 500\n");
+                    if (money - 500 >= 0 && NominalCash[2] > 0)
+                    {
+                        money -= 500;
+                        NominalCash[2] -= 1;
+                        Console.WriteLine("Изъята купюра номинала 500\n");
+                    }
+                    else break;
                 }
-                else break;
-            }
-            while (true)
-            {
-                if (money - 200 >= 0 && NominalCash[1] > 0)
+                while (true)
                 {
-                    money -= 200;
-                    NominalCash[1] -= 1;
-                    Console.WriteLine("Изъята купюра номинала 200\n");
+                    if (money - 200 >= 0 && NominalCash[1] > 0)
+                    {
+                        money -= 200;
+                        NominalCash[1] -= 1;
+                        Console.WriteLine("Изъята купюра номинала 200\n");
+                    }
+                    else break;
                 }
-                else break;
-            }
-            while (true)
-            {
-                if (money - 100 >= 0 && NominalCash[0] > 0)
+                while (true)
                 {
-                    money -= 100;
-                    NominalCash[0] -= 1;
-                    Console.WriteLine("Изъята купюра номинала 100\n");
+                    if (money - 100 >= 0 && NominalCash[0] > 0)
+                    {
+                        money -= 100;
+                        NominalCash[0] -= 1;
+                        Console.WriteLine("Изъята купюра номинала 100\n");
+                    }
+                    else break;
                 }
-                else break;
+                return true;
             }
-            if (money > 0)
+            else
             {
                 Console.WriteLine("Извините, на данный момент сумма не может быть выданна " +
-                    "из-за отсутствия купюр нужного номинала\n");
+                        "из-за отсутствия купюр нужного номинала\n");
                 return false;
             }
-            return true;
         }
 
         // Принять деньги из кассеты (Прибавляем купюры к словарю)
