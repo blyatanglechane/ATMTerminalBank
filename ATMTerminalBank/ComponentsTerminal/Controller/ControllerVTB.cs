@@ -10,8 +10,10 @@ namespace ATMTerminalBank.ComponentsTerminal.Controller
 {
     class ControllerVTB : IControllerComponent
     {
+        // Вызов процедуры оплаты услуг
         public int CallingTheController(int SumOfMoneyFromAccount, int Cash, IDispensaryComponent dispensary, IPrinterComponent printer)
         {
+            // Словарь, хранящий список услуг, которые можно оплатить
             Dictionary<string, int> SetPaiment = new Dictionary<string, int>()
             {
                 {"Коммунальные услуги", 3000 },
@@ -23,197 +25,209 @@ namespace ATMTerminalBank.ComponentsTerminal.Controller
                     "2. Сотовая связь (300 рублей)\n" +
                     "3. Оплатить интернет (900 рублей)\n" +
                     "4. Выход\n");
-            while (true)
+            int InputUser;
+            while (int.TryParse(Console.ReadLine(), out InputUser))
             {
-                string input = Console.ReadLine();
-                int InputUser = int.Parse(input);
                 switch (InputUser)
                 {
                     case 1:
                         Console.WriteLine("Какой способ оплаты вы выберете?\n" +
                             "1. Наличные\n" +
                             "2. Списать с аккаунта\n");
-                        string input2 = Console.ReadLine();
-                        int InputUser2 = int.Parse(input2);
-                        if (InputUser2 == 1)
+
+                        int InputUser2;
+                        while (int.TryParse(Console.ReadLine(), out InputUser2))
                         {
-                            if (Cash - 3000 > 0)
+                            if (InputUser2 == 1)
                             {
-                                if (dispensary.PutTheMoneyOnAccount(3000) == true)
+                                if (Cash - 3000 > 0)
+                                {
+                                    if (dispensary.PutTheMoneyOnAccount(3000) == true)
+                                    {
+                                        printer.PrintReceipt("ToPay", 3000);
+                                        return -3000;
+                                    }
+                                    else return 0;
+                                }
+                                else
+                                {
+
+                                    Console.WriteLine("У клиента недостаточно наличных для оплаты услуги\n"
+                                        + "Доступные услуги:\n");
+                                    int Counter = 1;
+                                    foreach (KeyValuePair<string, int> pair in SetPaiment)
+                                    {
+                                        if (Cash > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
+                                        else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
+                                        Counter++;
+                                    }
+                                    Console.WriteLine("4. Выход");
+                                    break;
+                                }
+                            }
+                            else if (InputUser2 == 2)
+                            {
+                                if (SumOfMoneyFromAccount - 3000 < 0)
+                                {
+                                    Console.WriteLine("На счёте недостаточно средств\n"
+                                         + "Доступные услуги:\n");
+                                    int Counter = 1;
+                                    foreach (KeyValuePair<string, int> pair in SetPaiment)
+                                    {
+                                        if (SumOfMoneyFromAccount > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
+                                        else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
+                                        Counter++;
+                                    }
+                                    Console.WriteLine("4. Выход");
+                                    break;
+                                }
+                                else if (dispensary.PutTheMoneyOnAccount(3000) == true)
                                 {
                                     printer.PrintReceipt("ToPay", 3000);
-                                    return -3000;
+                                    return 3000;
                                 }
                                 else return 0;
+
                             }
                             else
                             {
-
-                                Console.WriteLine("У клиента недостаточно наличных для оплаты услуги\n"
-                                    + "Доступные услуги:\n");
-                                int Counter = 1;
-                                foreach (KeyValuePair<string, int> pair in SetPaiment)
-                                {
-                                    if (Cash > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
-                                    else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
-                                    Counter++;
-                                }
-                                Console.WriteLine("4. Выход");
-                                continue;
+                                Console.WriteLine("Неизвестная операция\n");
+                                return 0;
                             }
                         }
-                        else if (InputUser2 == 2)
-                        {
-                            if (SumOfMoneyFromAccount - 3000 < 0)
-                            {
-                                Console.WriteLine("На счёте недостаточно средств\n"
-                                     + "Доступные услуги:\n");
-                                int Counter = 1;
-                                foreach (KeyValuePair<string, int> pair in SetPaiment)
-                                {
-                                    if (SumOfMoneyFromAccount > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
-                                    else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
-                                    Counter++;
-                                }
-                                Console.WriteLine("4. Выход");
-                                continue;
-                            }
-                            else if (dispensary.PutTheMoneyOnAccount(3000) == true)
-                            {
-                                printer.PrintReceipt("ToPay", 3000);
-                                return 3000;
-                            }
-                            else return 0;
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("Неизвестная операция\n");
-                            return 0;
-                        }
+                        Console.WriteLine("Неизвестная команда\n");
+                        break;
                     case 2:
                         Console.WriteLine("Какой способ оплаты вы выберете?\n" +
                             "1. Наличные\n" +
                             "2. Списать с аккаунта\n");
-                        string input3 = Console.ReadLine();
-                        int InputUser3 = int.Parse(input3);
-                        if (InputUser3 == 1)
+                        int InputUser3;
+                        while (int.TryParse(Console.ReadLine(), out InputUser3))
                         {
-                            if (Cash - 300 > 0)
+                            if (InputUser3 == 1)
                             {
-                                if (dispensary.PutTheMoneyOnAccount(300) == true)
+                                if (Cash - 300 > 0)
+                                {
+                                    if (dispensary.PutTheMoneyOnAccount(300) == true)
+                                    {
+                                        printer.PrintReceipt("ToPay", 300);
+                                        return -300;
+                                    }
+                                    else return 0;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("У клиента недостаточно наличных для оплаты услуги\n"
+                                        + "Доступные услуги:\n");
+                                    int Counter = 1;
+                                    foreach (KeyValuePair<string, int> pair in SetPaiment)
+                                    {
+                                        if (Cash > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
+                                        else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
+                                        Counter++;
+                                    }
+                                    Console.WriteLine("4. Выход");
+                                    break;
+                                }
+                            }
+                            else if (InputUser3 == 2)
+                            {
+                                if (SumOfMoneyFromAccount - 300 < 0)
+                                {
+                                    Console.WriteLine("На счёте недостаточно средств\n"
+                                    + "Доступные услуги:\n");
+                                    int Counter = 1;
+                                    foreach (KeyValuePair<string, int> pair in SetPaiment)
+                                    {
+                                        if (SumOfMoneyFromAccount > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
+                                        else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
+                                        Counter++;
+                                    }
+                                    Console.WriteLine("4. Выход");
+                                    break;
+
+                                }
+                                else if (dispensary.PutTheMoneyOnAccount(300) == true)
                                 {
                                     printer.PrintReceipt("ToPay", 300);
-                                    return -300;
+                                    return 300;
                                 }
                                 else return 0;
+
                             }
                             else
                             {
-                                Console.WriteLine("У клиента недостаточно наличных для оплаты услуги\n"
-                                    + "Доступные услуги:\n");
-                                int Counter = 1;
-                                foreach (KeyValuePair<string, int> pair in SetPaiment)
-                                {
-                                    if (Cash > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
-                                    else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
-                                    Counter++;
-                                }
-                                Console.WriteLine("4. Выход");
-                                continue;
+                                Console.WriteLine("Неизвестная операция\n");
+                                return 0;
                             }
                         }
-                        else if (InputUser3 == 2)
-                        {
-                            if (SumOfMoneyFromAccount - 300 < 0)
-                            {
-                                Console.WriteLine("На счёте недостаточно средств\n"
-                                + "Доступные услуги:\n");
-                                int Counter = 1;
-                                foreach (KeyValuePair<string, int> pair in SetPaiment)
-                                {
-                                    if (SumOfMoneyFromAccount > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
-                                    else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
-                                    Counter++;
-                                }
-                                Console.WriteLine("4. Выход");
-                                continue;
-
-                            }
-                            else if (dispensary.PutTheMoneyOnAccount(300) == true)
-                            {
-                                printer.PrintReceipt("ToPay", 300);
-                                return 300;
-                            }
-                            else return 0;
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("Неизвестная операция\n");
-                            return 0;
-                        }
+                        Console.WriteLine("Неизвестная команда\n");
+                        break;
                     case 3:
                         Console.WriteLine("Какой способ оплаты вы выберете?\n" +
                             "1. Наличные\n" +
                             "2. Списать с аккаунта\n");
-                        string input4 = Console.ReadLine();
-                        int InputUser4 = int.Parse(input4);
-                        if (InputUser4 == 1)
+                        int InputUser4;
+                        while (int.TryParse(Console.ReadLine(), out InputUser4))
                         {
-                            if (Cash - 900 > 0)
+                            if (InputUser4 == 1)
                             {
-                                if (dispensary.PutTheMoneyOnAccount(900) == true)
+                                if (Cash - 900 > 0)
+                                {
+                                    if (dispensary.PutTheMoneyOnAccount(900) == true)
+                                    {
+                                        printer.PrintReceipt("ToPay", 900);
+                                        return -900;
+                                    }
+                                    else return 0;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("У клиента недостаточно наличных для оплаты услуги\n"
+                                    + "Доступные услуги:\n");
+                                    int Counter = 1;
+                                    foreach (KeyValuePair<string, int> pair in SetPaiment)
+                                    {
+                                        if (Cash > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
+                                        else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
+                                        Counter++;
+                                    }
+                                    Console.WriteLine("4. Выход");
+                                    break;
+                                }
+                            }
+                            else if (InputUser4 == 2)
+                            {
+                                if (SumOfMoneyFromAccount - 900 < 0)
+                                {
+                                    Console.WriteLine("На счёте недостаточно средств\n"
+                                    + "Доступные услуги:\n");
+                                    int Counter = 1;
+                                    foreach (KeyValuePair<string, int> pair in SetPaiment)
+                                    {
+                                        if (SumOfMoneyFromAccount > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
+                                        else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
+                                        Counter++;
+                                    }
+                                    Console.WriteLine("4. Выход");
+                                    break;
+                                }
+                                else if (dispensary.PutTheMoneyOnAccount(900) == true)
                                 {
                                     printer.PrintReceipt("ToPay", 900);
-                                    return -900;
+                                    return 900;
                                 }
                                 else return 0;
+
                             }
                             else
                             {
-                                Console.WriteLine("У клиента недостаточно наличных для оплаты услуги\n"
-                                + "Доступные услуги:\n");
-                                int Counter = 1;
-                                foreach (KeyValuePair<string, int> pair in SetPaiment)
-                                {
-                                    if (Cash > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
-                                    else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
-                                    Counter++;
-                                }
-                                Console.WriteLine("4. Выход");
-                                continue;
+                                Console.WriteLine("Неизвестная операция\n");
+                                return 0;
                             }
                         }
-                        else if (InputUser4 == 2)
-                        {
-                            if (SumOfMoneyFromAccount - 900 < 0)
-                            {
-                                Console.WriteLine("На счёте недостаточно средств\n"
-                                + "Доступные услуги:\n");
-                                int Counter = 1;
-                                foreach (KeyValuePair<string, int> pair in SetPaiment)
-                                {
-                                    if (SumOfMoneyFromAccount > pair.Value) Console.WriteLine(Counter + ". " + pair.Key + "  <- Достаточно для оплаты");
-                                    else Console.WriteLine(Counter + ". " + pair.Key + "  Недостаточно средств!");
-                                    Counter++;
-                                }
-                                Console.WriteLine("4. Выход");
-                                continue;
-                            }
-                            else if (dispensary.PutTheMoneyOnAccount(900) == true)
-                            {
-                                printer.PrintReceipt("ToPay", 900);
-                                return 900;
-                            }
-                            else return 0;
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("Неизвестная операция\n");
-                            return 0;
-                        }
+                        Console.WriteLine("Неизвестная команда\n");
+                        break;
                     case 4:
                         return 0;
                     default:
@@ -222,6 +236,9 @@ namespace ATMTerminalBank.ComponentsTerminal.Controller
 
                 }
             }
+            Console.WriteLine("Неизвестная команда\n");
+            return 0;
+
         }
     }
 }

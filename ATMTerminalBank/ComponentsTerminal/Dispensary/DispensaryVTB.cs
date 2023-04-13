@@ -27,7 +27,7 @@ namespace ATMTerminalBank.ComponentsTerminal.Dispensary
         // запрос к кассете на внесение денег
         public bool PutTheMoneyOnAccount(int Money)
         {
-            if (Money % 100 == 0) { CurrentCassette.ReceiveMoney(Money); return true; }
+            if (Money % 100 == 0 && Money > 0) { CurrentCassette.ReceiveMoney(Money); return true; }
             else { Console.WriteLine("Данная сумма не может быть занесена\n"); return false; }
         }
     }

@@ -20,7 +20,7 @@ namespace ATMTerminalBank.Сlient
         int Сash = 0;
 
         // Используемый терминал
-        IATMTerminal CurrentTerminal = null;
+        IATMTerminal CurrentTerminal;
 
         // конструктор класса
         public BaseClient(string Name, int SumOfMoneyFromAccount, int Cash)
@@ -38,13 +38,20 @@ namespace ATMTerminalBank.Сlient
             CurrentTerminal.PrintSetOperation();
         }
 
+        // Выводит сколько наличных с собой имеет клиент и баланс его счёта
+        public void PrintAccount()
+        {
+            Console.WriteLine("Наличных с собой: " + Сash + "\n" +
+                "Денег на счету: " + SumOfMoneyFromAccount + "\n");
+        }
+
         // клиент хочет внести деньги
         public void DepositFunds(int cash)
         {
             Console.WriteLine("Проверка на внесённость купюр\n");
             if (CurrentTerminal != null)
             {
-                if (cash > this.Сash)
+                if (cash > this.Сash || cash < 0)
                 {
                     Console.WriteLine("Диспансер не обнаружил купюры\n");
                     Console.WriteLine("У клиента нету таких наличных\n");
@@ -52,7 +59,7 @@ namespace ATMTerminalBank.Сlient
                 else
                 {
                     Console.WriteLine("Запускается процесс занесения денег на счёт\n");
-                    if (CurrentTerminal.DepositFunds(cash) == true) { this.SumOfMoneyFromAccount += cash; Console.WriteLine("Деньги зачислились на счёт\n"); }
+                    if (CurrentTerminal.DepositFunds(cash) == true) { this.SumOfMoneyFromAccount += cash; this.Сash -= cash; Console.WriteLine("Деньги зачислились на счёт\n"); }
                 }
             }
             else Console.WriteLine("Клиент не выбрал терминал\n");
@@ -63,9 +70,18 @@ namespace ATMTerminalBank.Сlient
         {
             if (CurrentTerminal != null)
             {
-                if (SumOfMoneyFromAccount > this.SumOfMoneyFromAccount) 
+                if (SumOfMoneyFromAccount > this.SumOfMoneyFromAccount || SumOfMoneyFromAccount < 0)
                     Console.WriteLine("На вашем счёте недостаточно средств\n");
-                else CurrentTerminal.WithdrawFunds(SumOfMoneyFromAccount);
+                else
+                {
+                    Console.WriteLine("Запускается процесс снятия денег с счёта\n");
+                    if (CurrentTerminal.WithdrawFunds(SumOfMoneyFromAccount) == true) 
+                    { 
+                        this.SumOfMoneyFromAccount -= SumOfMoneyFromAccount; 
+                        this.Сash += SumOfMoneyFromAccount; 
+                        Console.WriteLine("Деньги зачислились на счёт\n"); 
+                    }
+                }
             }
             else Console.WriteLine("Клиент не выбрал терминал\n");
 

@@ -37,13 +37,14 @@ namespace ATMTerminalBank.ATMTerminalBank
         // Вывести список операций
         public void PrintSetOperation()
         {
-            Console.WriteLine("Выводим список операций");
+            Console.WriteLine("Выводим список операций\n");
             Console.WriteLine("Здравствуйте, вас приветствует терминал Сбербанка!\n" +
                    "Выберите операцию, которую хотите выполнить:\n" +
                    "1. Внести наличные.\n" +
                    "2. Снять наличные.\n" +
                    "3. Оплата услуг.\n" +
-                   "4. Выход\n");
+                   "4. Проверить баланс счёта\n" +
+                   "5. Выход\n");
         }
 
         // Внесение средств
@@ -61,6 +62,7 @@ namespace ATMTerminalBank.ATMTerminalBank
         // Снятие средств
         public bool WithdrawFunds(int SumOfMoneyFromAccount)
         {
+            Console.WriteLine("Диспансер делает запрос на использование кассеты\n");
             if (dispensary.GiveMeMoneyFromCassette(SumOfMoneyFromAccount) == true)
             {
                 printer.PrintReceipt("Withdraw", SumOfMoneyFromAccount);
@@ -72,6 +74,7 @@ namespace ATMTerminalBank.ATMTerminalBank
         // Оплата услуг
         public int ToPay(int SumOfMoneyFromAccount, int Cash)
         {
+            Console.WriteLine("Контроллер вызывает процедуру\n");
             return controller.CallingTheController(SumOfMoneyFromAccount, Cash, dispensary, printer);
         }
     }
